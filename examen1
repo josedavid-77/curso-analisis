@@ -308,6 +308,6 @@ def menu():
         else:
             print("Opcion incorrecta.")
 
-            
+
 menu()
 
