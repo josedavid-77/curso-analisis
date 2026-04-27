@@ -1,0 +1,313 @@
+class PuestoTrabajo:
+    def __init__(self, codigo, descripcion, area, plazas, sueldo):
+        self.codigo = codigo
+        self.descripcion = descripcion
+        self.area = area
+        self.plazas = plazas
+        self.sueldo = sueldo
+
+    def total_dinero(self):
+        return self.plazas * self.sueldo
+
+    def mostrar(self):
+        print("-----------------------------------")
+        print("Codigo:", self.codigo)
+        print("Descripcion:", self.descripcion)
+        print("Area Solicitante:", self.area)
+        print("Plazas Requeridas:", self.plazas)
+        print("Sueldo:", self.sueldo)
+        print("Total Requerido:", self.total_dinero())
+
+
+# ---------- LISTA ----------
+lista_puestos = []
+
+
+
+
+def pedir_entero(mensaje):
+    while True:
+        try:
+            num = int(input(mensaje))
+            return num
+        except:
+            print("Ingrese un numero entero valido.")
+
+
+def pedir_decimal(mensaje):
+    while True:
+        try:
+            num = float(input(mensaje))
+            return num
+        except:
+            print("Ingrese un numero valido.")
+
+
+def pedir_texto(mensaje):
+    while True:
+        txt = input(mensaje).strip()
+        if len(txt) >= 3:
+            return txt
+        else:
+            print("Debe tener minimo 3 letras.")
+
+
+
+
+def AgregaPuesto():
+
+    print("\n=== REGISTRAR PUESTO ===")
+
+    codigo = pedir_entero("Codigo: ")
+
+    if codigo <= 0:
+        print("Codigo debe ser mayor a cero.")
+        return
+
+    # buscar codigo repetido
+    for x in lista_puestos:
+        if x.codigo == codigo:
+            print("Ya existe ese codigo.")
+            return
+
+    descripcion = pedir_texto("Descripcion: ")
+
+    for x in lista_puestos:
+        if x.descripcion.lower() == descripcion.lower():
+            print("Ya existe esa descripcion.")
+            return
+
+    area = pedir_texto("Area solicitante: ")
+
+    for x in lista_puestos:
+        if x.area.lower() == area.lower():
+            print("Ya existe esa area.")
+            return
+
+    plazas = pedir_entero("Plazas requeridas: ")
+
+    if plazas <= 0:
+        print("Debe ser mayor a cero.")
+        return
+
+    sueldo = pedir_decimal("Sueldo: ")
+
+    if sueldo <= 0:
+        print("Debe ser mayor a cero.")
+        return
+
+    nuevo = PuestoTrabajo(codigo, descripcion, area, plazas, sueldo)
+    lista_puestos.append(nuevo)
+
+    print("Puesto agregado correctamente.")
+
+
+
+def MostrarTodo():
+
+    print("\n=== LISTA DE PUESTOS ===")
+
+    if len(lista_puestos) == 0:
+        print("No existen puestos registrados.")
+        return
+
+    for x in lista_puestos:
+        x.mostrar()
+
+
+
+
+def ordenar_burbuja_codigo():
+
+    n = len(lista_puestos)
+
+    for i in range(n - 1):
+        for j in range(n - i - 1):
+
+            if lista_puestos[j].codigo < lista_puestos[j + 1].codigo:
+
+                aux = lista_puestos[j]
+                lista_puestos[j] = lista_puestos[j + 1]
+                lista_puestos[j + 1] = aux
+
+
+
+
+def BorraPuesto():
+
+    print("\n=== BORRAR PUESTO ===")
+
+    if len(lista_puestos) == 0:
+        print("Lista vacia.")
+        return
+
+    codigo = pedir_entero("Codigo a borrar: ")
+
+    ordenar_burbuja_codigo()
+
+    encontrado = False
+
+    for i in range(len(lista_puestos)):
+        if lista_puestos[i].codigo == codigo:
+            lista_puestos.pop(i)
+            encontrado = True
+            print("Puesto eliminado.")
+            break
+
+    if encontrado == False:
+        print("Codigo no encontrado.")
+
+
+
+def ordenar_insercion_sueldo():
+
+    for i in range(1, len(lista_puestos)):
+
+        aux = lista_puestos[i]
+        j = i - 1
+
+        while j >= 0 and lista_puestos[j].sueldo < aux.sueldo:
+            lista_puestos[j + 1] = lista_puestos[j]
+            j = j - 1
+
+        lista_puestos[j + 1] = aux
+
+
+
+def BuscaSueldo():
+
+    print("\n=== BUSCAR SUELDO ===")
+
+    if len(lista_puestos) == 0:
+        print("Lista vacia.")
+        return
+
+    ordenar_insercion_sueldo()
+
+    buscar = pedir_decimal("Sueldo a buscar: ")
+
+    izquierda = 0
+    derecha = len(lista_puestos) - 1
+    pos = -1
+
+    while izquierda <= derecha:
+
+        centro = (izquierda + derecha) // 2
+
+        if lista_puestos[centro].sueldo == buscar:
+            pos = centro
+            break
+
+        elif buscar > lista_puestos[centro].sueldo:
+            derecha = centro - 1
+
+        else:
+            izquierda = centro + 1
+
+    if pos == -1:
+        print("No existe ese sueldo.")
+        return
+
+    # buscar repetidos
+    i = pos
+
+    while i >= 0 and lista_puestos[i].sueldo == buscar:
+        i = i - 1
+
+    i = i + 1
+
+    while i < len(lista_puestos) and lista_puestos[i].sueldo == buscar:
+        lista_puestos[i].mostrar()
+        i = i + 1
+
+
+
+def ordenar_seleccion_total():
+
+    n = len(lista_puestos)
+
+    for i in range(n - 1):
+
+        mayor = i
+
+        for j in range(i + 1, n):
+
+            if lista_puestos[j].total_dinero() > lista_puestos[mayor].total_dinero():
+                mayor = j
+
+        aux = lista_puestos[i]
+        lista_puestos[i] = lista_puestos[mayor]
+        lista_puestos[mayor] = aux
+
+
+
+def PuestosAContratar():
+
+    print("\n=== PUESTOS A CONTRATAR ===")
+
+    if len(lista_puestos) == 0:
+        print("Lista vacia.")
+        return
+
+    monto = pedir_decimal("Monto total disponible: ")
+
+    if monto <= 0:
+        print("Monto invalido.")
+        return
+
+    ordenar_seleccion_total()
+
+    acumulado = 0
+
+    for x in lista_puestos:
+
+        total = x.total_dinero()
+
+        if acumulado + total <= monto:
+            x.mostrar()
+            acumulado = acumulado + total
+
+    print("-----------------------------------")
+    print("Monto utilizado:", acumulado)
+
+
+
+def menu():
+
+    while True:
+
+        print("\n========== MENU ==========")
+        print("1. AgregaPuesto")
+        print("2. MostrarTodo")
+        print("3. BorraPuesto")
+        print("4. BuscaSueldo")
+        print("5. PuestosAContratar")
+        print("6. Salir")
+
+        opcion = pedir_entero("Seleccione opcion: ")
+
+        if opcion == 1:
+            AgregaPuesto()
+
+        elif opcion == 2:
+            MostrarTodo()
+
+        elif opcion == 3:
+            BorraPuesto()
+
+        elif opcion == 4:
+            BuscaSueldo()
+
+        elif opcion == 5:
+            PuestosAContratar()
+
+        elif opcion == 6:
+            print("Programa finalizado.")
+            break
+
+        else:
+            print("Opcion incorrecta.")
+
+            
+menu()
+
