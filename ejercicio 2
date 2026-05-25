@@ -1,0 +1,30 @@
+def sumar_rango_recursivo(lista, pi, pf):
+    if pi > pf:
+        return 0
+    return lista[pi - 1] + sumar_rango_recursivo(lista, pi + 1, pf)
+
+if __name__ == "__main__":
+    try:
+        cantidad = int(input("¿Cuántos números tendrá la lista?: "))
+        
+        if cantidad <= 0:
+            print("Error: El tamaño debe ser mayor a 0.")
+        else:
+            lista_usuario = []
+            for i in range(cantidad):
+                num = int(input(f"Ingrese el número para la posición {i + 1}: "))
+                lista_usuario.append(num)
+            
+            print(f"\nLista ingresada: {lista_usuario}")
+            
+            pi_usuario = int(input("Ingrese la posición inicial (PI): "))
+            pf_usuario = int(input("Ingrese la posición final (PF): "))
+            
+            if pi_usuario < 1 or pf_usuario > len(lista_usuario) or pi_usuario > pf_usuario:
+                print("Error: Las posiciones están fuera de rango o son inválidas.")
+            else:
+                resultado_usuario = sumar_rango_recursivo(lista_usuario, pi_usuario, pf_usuario)
+                print(f"\nResultado = {resultado_usuario}")
+                
+    except ValueError:
+        print("Error: Ingrese únicamente números enteros válidos.")
