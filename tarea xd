@@ -1,0 +1,48 @@
+import random
+
+def encontrar_max_min_recursivo(arreglo, indice, maximo, minimo):
+    if indice == len(arreglo):
+        return maximo, minimo
+    
+    elemento_actual = arreglo[indice]
+    
+    if elemento_actual % 3 == 0:
+        if maximo is None or elemento_actual > maximo:
+            maximo = elemento_actual
+        if minimo is None or elemento_actual < minimo:
+            minimo = elemento_actual
+            
+    return encontrar_max_min_recursivo(arreglo, indice + 1, maximo, minimo)
+
+def calcular_promedio_multiplos_3(arreglo):
+    maximo, minimo = encontrar_max_min_recursivo(arreglo, 0, None, None)
+    
+    if maximo is None or minimo is None:
+        return None
+        
+    return (maximo + minimo) / 2
+
+if __name__ == "__main__":
+    try:
+        cantidad_elementos = int(input("Ingrese el tamaño del arreglo: "))
+        
+        if cantidad_elementos <= 0:
+            print("El tamaño del arreglo debe ser mayor a cero.")
+        else:
+            arreglo_final = []
+            for _ in range(cantidad_elementos):
+                numero_aleatorio = random.randint(10, 9999)
+                arreglo_final.append(numero_aleatorio)
+                
+            print("\nArreglo generado:")
+            print(arreglo_final)
+            
+            promedio_resultado = calcular_promedio_multiplos_3(arreglo_final)
+            
+            if promedio_resultado is not None:
+                print(f"\nResultado = {promedio_resultado}")
+            else:
+                print("\nNo existen múltiplos de 3 en el arreglo generado.")
+                
+    except ValueError:
+        print("Error: Debe ingresar un número entero válido.")
